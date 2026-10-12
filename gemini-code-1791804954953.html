@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eric2mat — Convertisseur et Téléchargeur Multimédia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans selection:bg-brand-500 selection:text-white">
+
+    <!-- Arrière-plan décoratif -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/2 -right-40 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- En-tête -->
+    <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center font-black text-xl shadow-lg shadow-purple-500/20">
+                    e2m
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-purple-400 bg-clip-text text-transparent">eric2mat</h1>
+                    <p class="text-xs text-slate-400">Convertisseur vidéo et audio haute vitesse</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 bg-slate-800/60 px-3 py-1.5 rounded-full border border-slate-700/50 text-xs text-emerald-400 font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Moteur Cloud Actif</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="max-w-4xl mx-auto px-4 py-12 w-full flex-1 flex flex-col justify-center">
+        
+        <div class="text-center space-y-4 mb-10">
+            <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+                Téléchargez vos médias depuis <span class="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">n'importe où</span>
+            </h2>
+            <p class="text-slate-400 max-w-xl mx-auto text-sm md:text-base">
+                Gère YouTube (y compris les vidéos VEVO protégées), TikTok, Facebook, Instagram et bien plus encore, sans aucune restriction.
+            </p>
+        </div>
+
+        <!-- Formulaire de conversion -->
+        <div class="bg-slate-900/80 border border-slate-800 p-6 md:p-8 rounded-3xl shadow-2xl backdrop-blur-xl space-y-6">
+            
+            <div class="space-y-2">
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-400">Lien du média</label>
+                <div class="relative">
+                    <input type="url" id="mediaUrl" placeholder="Collez l'URL de votre vidéo (ex : https://www.youtube.com/watch?v=...)" 
+                        class="w-full bg-slate-950/80 border border-slate-700/80 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-white rounded-2xl py-4 pl-12 pr-4 text-sm transition outline-none">
+                    <i class="fa-solid fa-link absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button type="button" onclick="selectFormat('mp4')" id="btn-mp4" class="format-btn border-2 border-brand-500 bg-brand-500/10 text-white p-4 rounded-2xl flex items-center justify-between transition">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-film text-brand-500 text-lg"></i>
+                        <div class="text-left">
+                            <div class="font-bold text-sm">MP4 HD</div>
+                            <div class="text-xs text-slate-400">Vidéo standard</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-brand-500 check-icon"></i>
+                </button>
+
+                <button type="button" onclick="selectFormat('mp3')" id="btn-mp3" class="format-btn border border-slate-800 bg-slate-950/40 text-slate-300 p-4 rounded-2xl flex items-center justify-between transition hover:border-slate-700">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-music text-slate-400 text-lg"></i>
+                        <div class="text-left">
+                            <div class="font-bold text-sm">MP3 Audio</div>
+                            <div class="text-xs text-slate-400">Extraire la musique</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-brand-500 check-icon hidden"></i>
+                </button>
+
+                <button type="button" onclick="selectFormat('4k')" id="btn-4k" class="format-btn border border-slate-800 bg-slate-950/40 text-slate-300 p-4 rounded-2xl flex items-center justify-between transition hover:border-slate-700">
+                    <div class="flex items-center space-x-3">
+                        <i class="fa-solid fa-tv text-slate-400 text-lg"></i>
+                        <div class="text-left">
+                            <div class="font-bold text-sm">MP4 4K / Max</div>
+                            <div class="text-xs text-slate-400">Qualité maximale</div>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-brand-500 check-icon hidden"></i>
+                </button>
+            </div>
+
+            <button id="downloadBtn" onclick="startDownload()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-[0.99] text-white font-bold py-4 rounded-2xl shadow-lg shadow-purple-600/30 flex items-center justify-center space-x-3 transition">
+                <i class="fa-solid fa-download"></i>
+                <span>Convertir et Télécharger</span>
+            </button>
+
+            <!-- Zone d'état / progression -->
+            <div id="statusBox" class="hidden p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-3">
+                <div class="flex justify-between items-center text-xs text-slate-300">
+                    <span id="statusText"><i class="fa-solid fa-spinner fa-spin mr-2 text-brand-500"></i> Traitement de la demande en cours...</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Exemples de test rapide -->
+        <div class="mt-8 text-center space-y-3">
+            <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Lien de test rapide</p>
+            <button onclick="setTestUrl()" class="text-xs text-purple-400 hover:text-purple-300 underline underline-offset-4 transition">
+                Tester avec le clip officiel "Papa Roach - Last Resort" (VEVO)
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Pied de page -->
+    <footer class="border-t border-slate-800/60 py-6 text-center text-xs text-slate-500">
+        <p>© 2026 eric2mat — Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        let currentFormat = 'mp4';
+
+        function selectFormat(fmt) {
+            currentFormat = fmt;
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.remove('border-2', 'border-brand-500', 'bg-brand-500/10');
+                btn.classList.add('border', 'border-slate-800', 'bg-slate-950/40');
+                btn.querySelector('.check-icon').classList.add('hidden');
+            });
+
+            const activeBtn = document.getElementById(`btn-${fmt}`);
+            activeBtn.classList.remove('border-slate-800', 'bg-slate-950/40');
+            activeBtn.classList.add('border-2', 'border-brand-500', 'bg-brand-500/10');
+            activeBtn.querySelector('.check-icon').classList.remove('hidden');
+        }
+
+        function setTestUrl() {
+            document.getElementById('mediaUrl').value = 'https://www.youtube.com/watch?v=j0lSpNtjPM8';
+        }
+
+        async function startDownload() {
+            const url = document.getElementById('mediaUrl').value.trim();
+            if (!url) {
+                alert('Veuillez coller un lien valide avant de continuer.');
+                return;
+            }
+
+            const btn = document.getElementById('downloadBtn');
+            const statusBox = document.getElementById('statusBox');
+            const statusText = document.getElementById('statusText');
+
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            statusBox.classList.remove('hidden');
+            statusText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2 text-brand-500"></i> Connexion au moteur d\'extraction sécurisé...';
+
+            try {
+                // Utilisation de l'API Cobalt publique et sécurisée pour contourner les blocages
+                const response = await fetch("https://api.cobalt.tools/api/json", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        isAudioOnly: currentFormat === 'mp3',
+                        videoQuality: currentFormat === '4k' ? 'max' : '720'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.url) {
+                    statusText.innerHTML = '<i class="fa-solid fa-check mr-2 text-emerald-400"></i> Fichier prêt ! Lancement du téléchargement...';
+                    window.location.href = data.url;
+                } else if (data.picker && data.picker.length > 0) {
+                    statusText.innerHTML = '<i class="fa-solid fa-check mr-2 text-emerald-400"></i> Fichier prêt !';
+                    window.location.href = data.picker[0].url;
+                } else {
+                    throw new Error(data.text || "Impossible d'extraire ce lien.");
+                }
+            } catch (err) {
+                statusText.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2 text-amber-400"></i> Erreur : ${err.message || "Lien non pris en charge."}`;
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+</html>
